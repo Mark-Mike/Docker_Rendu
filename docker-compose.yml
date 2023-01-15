@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+
+  flask:
+    build: ./back-end
+    container_name: back
+    ports:
+      - 5000:5000
+
+  angular:
+    build: ./front-end
+    container_name: front
+    ports:
+      - 4200:4200
+
+  db:
+    image: wnameless/oracle-xe-11g-r2
+    environment:
+      - ORACLE_ALLOW_REMOTE=true
+    ports:
+      - 49261:1521
+    volumes:
+      - ./0_init.sql:/docker-entrypoint-initdb.d/0_init.sql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "bash",
+          "-c",
+          "echo 'select 1 from dual;' | ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe /u01/app/oracle/product/11.2.0/xe/bin/sqlplus -s USERNAME/PASSWORD@localhost"
+        ]
+      # docker inspect --format "{{json .State.Health }}"  myproject_db_1
+      interval: 10s
+      timeout: 10s
+      retries: 60
+  myservice:
+    image: xxx
+    depends_on:
+      db:
+        condition: service_healthy

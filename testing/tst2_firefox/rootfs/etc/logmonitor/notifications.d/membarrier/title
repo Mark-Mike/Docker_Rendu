@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "$APP_NAME requires the membarrier system call."
