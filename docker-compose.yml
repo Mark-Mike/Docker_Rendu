@@ -1,18 +1,40 @@
 version: '3.9'
 
-services:
+networks:
+  # we create a network called localnet, with a personalized subnet
+  localnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.44.0.0/16
 
-  flask:
-    build: ./back-end
-    container_name: back
-    ports:
-      - 5000:5000
+services:
 
   angular:
     build: ./front-end
     container_name: front
     ports:
       - 4200:4200
+      - 49153:49153
+    volumes:
+      # another way to access our project is by mounting a repo in the local directories
+      # by doing this we can even apply modifications or create another angular projects inside the container
+      # without having to initiate them in local and then copy them
+      # and because the front program is pretty heavy it will take a long time copying it
+      # so it is a good idea to do it like this
+      - /vagrant/HPDA/CCA/TP-Microservices/Rendu/angular:/front
+      # i did vagrant because i installed docker in a VM because docker stopped working for me in local for unknown reasons
+      # so i copied the path of the folder we have our front app inside the virtual machine
+    networks:
+      - localnet
+
+  flask:
+    build: ./back-end
+    container_name: back
+    ports:
+      - 5000:5000
+    networks:
+      - localnet
 
   db:
     image: wnameless/oracle-xe-11g-r2
@@ -22,6 +44,8 @@ services:
       - 49261:1521
     volumes:
       - ./0_init.sql:/docker-entrypoint-initdb.d/0_init.sql
+    networks:
+      - localnet
     healthcheck:
       test:
         [
@@ -33,8 +57,3 @@ services:
       interval: 10s
       timeout: 10s
       retries: 60
-  myservice:
-    image: xxx
-    depends_on:
-      db:
-        condition: service_healthy

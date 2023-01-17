@@ -1,19 +1,16 @@
 # obtain nodejs image
-FROM node:14-alpine 
+FROM node:18.12.1-alpine
 
 # install angular dependencies
 RUN npm install -g @angular/cli
 
-USER node
-
-# main repository
-WORKDIR /
-
-# copy our angular repository to a new folder
-COPY ./material-dashboard-angular2-master ./front
+# specify the workspace for the application in order to run it
+# WORKDIR /front/app1
+WORKDIR /front/material-dashboard-angular2
 
 # expose the angular ports
 EXPOSE 4200 49153
 
 # execute command start
+RUN npm install --save-dev @angular-devkit/build-angular
 CMD npm start
