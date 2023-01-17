@@ -6,3 +6,7 @@
 docker-compose up -d --build  # in detached mode, and build, to build the images
 
 # next we will have our back and front end running in the urls:
+- front : 
+- back : 
+
+HPDA/CCA/TP-Microservices/Rendu

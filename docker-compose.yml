@@ -30,7 +30,6 @@ services:
           "-c",
           "echo 'select 1 from dual;' | ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe /u01/app/oracle/product/11.2.0/xe/bin/sqlplus -s USERNAME/PASSWORD@localhost"
         ]
-      # docker inspect --format "{{json .State.Health }}"  myproject_db_1
       interval: 10s
       timeout: 10s
       retries: 60

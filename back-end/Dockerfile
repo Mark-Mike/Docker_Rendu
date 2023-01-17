@@ -1,4 +1,5 @@
-FROM python:3.8-slim-buster
+# obtain python image
+FROM python:3.8-slim-buster 
 
 WORKDIR /requirements  # create repo named requirements
 
@@ -10,7 +11,7 @@ RUN pip3 install -r requirements.txt
 WORKDIR /
 
 # create new repo and copy whats inside our flask code to it
-COPY ./flask ./copied_code  
+COPY ./flask ./back
 
 WORKDIR /copied_code
 
